@@ -86,7 +86,7 @@ class _ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
         somaxconn = 0
         try:
             somaxconn = self.get_somaxconn()
-        except Exception e:
+        except Exception:
             pass
         self.request_queue_size = max(socket.SOMAXCONN, somaxconn)
         self.allow_reuse_address = True

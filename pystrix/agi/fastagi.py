@@ -83,7 +83,12 @@ class _ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
         # adjust request queue size to a saner value for modern systems
         # further adjustments are automatically picked up for kernel
         # settings on server start
-        self.request_queue_size = max(socket.SOMAXCONN, self.get_somaxconn())
+        somaxconn = 0
+        try:
+            somaxconn = self.get_somaxconn()
+        except Exception e:
+            pass
+        self.request_queue_size = max(socket.SOMAXCONN, somaxconn)
         self.allow_reuse_address = True
         super().__init__(*args, **kwargs)
 

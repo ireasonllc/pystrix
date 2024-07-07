@@ -42,6 +42,7 @@ import subprocess
 import threading
 from pystrix.agi.agi_core import *
 from pystrix.agi.agi_core import _AGI
+from urllib.parse import urlparse, parse_qs
 
 try:
     import socketserver
@@ -130,7 +131,9 @@ class _AGIClientHandler(socketserver.StreamRequestHandler):
         path = tokens[0]
         if len(tokens) == 1:
             return (path, {})
-        return (path, cgi.urlparse.parse_qs(tokens[1]))
+        query_dict = parse_qs(tokens[1])
+        query_dict = {k: v[0] if len(v) == 1 else v for k, v in query_dict.items()}
+        return (path, query_dict)
 
 class FastAGIServer(_ThreadedTCPServer):
     """
